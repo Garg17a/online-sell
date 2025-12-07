@@ -26,15 +26,19 @@ function renderProducts(){
 
     products.forEach((p,i) => {
         list.innerHTML += `
-        <div class="product-card">
-            <img src="${p.img}" alt="${p.name}">
-            <h3>${p.name}</h3>
-            <p><strong>₹${p.price}</strong></p>
-            <button class="btn cart-btn" onclick="addToCart(${i})">Add to Cart</button>
-            <a href="https://wa.me/918607457689?text=I want to order ${p.name}" target="_blank">
-                <button class="btn">WhatsApp Order</button>
-            </a>
-        </div>`;
+    <div class="product-card">
+        <img src="${p.img}" alt="${p.name}">
+        <h3>${p.name}</h3>
+        <p><strong>₹${p.price}</strong></p>
+
+        <label>Quantity (bags):</label>
+        <input id="qty${i}" type="number" min="1" value="1" style="width:80px;padding:5px;margin:5px 0">
+
+        <button class="btn cart-btn" onclick="addToCart(${i})">Add to Cart</button>
+
+        <button class="btn" onclick="whatsappOrder(${i})">WhatsApp Order</button>
+    </div>
+`;
     });
 }
 
@@ -81,5 +85,35 @@ function addProduct(){
 function payNow(){
     alert("Razorpay payment gateway integration coming next.");
 }
+
+function whatsappOrder(i) {
+    let p = products[i];
+    let qty = document.getElementById(`qty${i}`).value;
+
+    let message = 
+`📦 *New Order Request*
+
+🛒 *Product:* ${p.name}
+📦 *Quantity:* ${qty} Bag(s)
+💵 *Price per Bag:* ₹${p.price}
+💰 *Total Amount:* ₹${p.price * qty}
+
+👤 *Customer Details*
+Name:
+Phone:
+Village/City:
+Address:
+
+Please confirm my order.`;
+
+    let encodedMessage = encodeURIComponent(message);
+
+    // Put your real WhatsApp number here
+    let phone = "918607457689"; 
+
+    let url = `https://wa.me/${phone}?text=${encodedMessage}`;
+    window.open(url, "_blank");
+}
+
 
 renderProducts();

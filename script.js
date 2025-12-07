@@ -34,9 +34,10 @@ function renderProducts(){
         <label>Quantity (bags):</label>
         <input id="qty${i}" type="number" min="1" value="1" style="width:80px;padding:5px;margin:5px 0">
 
-        <button class="btn cart-btn" onclick="addToCart(${i})">Add to Cart</button>
 
-        <button class="btn" onclick="whatsappOrder(${i})">WhatsApp Order</button>
+        <button class="btn cart-btn" onclick="addToCart(${i})">Add to Cart</button>
+        <button class="btn" onclick="openOrderForm(${i})">Order Now</button>
+
     </div>
 `;
     });
@@ -86,33 +87,95 @@ function payNow(){
     alert("Razorpay payment gateway integration coming next.");
 }
 
-function whatsappOrder(i) {
-    let p = products[i];
-    let qty = document.getElementById(`qty${i}`).value;
+// function whatsappOrder(i) {
+//     let p = products[i];
+//     let qty = document.getElementById(`qty${i}`).value;
+
+//     let message = 
+// `📦 *New Order Request*
+
+// 🛒 *Product:* ${p.name}
+// 📦 *Quantity:* ${qty} Bag(s)
+// 💵 *Price per Bag:* ₹${p.price}
+// 💰 *Total Amount:* ₹${p.price * qty}
+
+// 👤 *Customer Details*
+// Name:
+// Phone:
+// Village/City:
+// Address:
+
+// Please confirm my order.`;
+
+//     let encodedMessage = encodeURIComponent(message);
+
+//     // Put your real WhatsApp number here
+//     let phone = "918607457689"; 
+
+//     let url = `https://wa.me/${phone}?text=${encodedMessage}`;
+//     window.open(url, "_blank");
+// }
+
+
+let selectedProduct = null;
+
+function openOrderForm(i) {
+    selectedProduct = products[i];
+
+    document.getElementById("orderProductName").innerText = selectedProduct.name;
+    document.getElementById("orderProductPrice").innerText = selectedProduct.price;
+
+    document.getElementById("orderForm").style.display = "flex";
+}
+
+function closeOrderForm() {
+    document.getElementById("orderForm").style.display = "none";
+}
+
+function sendOrderWhatsApp() {
+    let qty = document.getElementById("orderQty").value;
+    let name = document.getElementById("custName").value;
+    let phone = document.getElementById("custPhone").value;
+    let village = document.getElementById("custVillage").value;
+    let address = document.getElementById("custAddress").value;
+
+    let deliveryCharge = parseInt(document.getElementById("deliveryOption").value);
+    let payment = document.getElementById("paymentMethod").value;
+
+    if (!name || !phone || !village) {
+        alert("Please fill all required fields");
+        return;
+    }
+
+    let total = selectedProduct.price * qty + deliveryCharge;
 
     let message = 
-`📦 *New Order Request*
+`🟢 *New Order Request*
 
-🛒 *Product:* ${p.name}
-📦 *Quantity:* ${qty} Bag(s)
-💵 *Price per Bag:* ₹${p.price}
-💰 *Total Amount:* ₹${p.price * qty}
+📦 *Product:* ${selectedProduct.name}
+🔢 *Quantity:* ${qty} bag(s)
+💰 *Price:* ₹${selectedProduct.price}
+🚚 *Delivery Charge:* ₹${deliveryCharge}
+💵 *Total Amount:* ₹${total}
 
 👤 *Customer Details*
-Name:
-Phone:
-Village/City:
-Address:
+Name: ${name}
+Phone: ${phone}
+Village/City: ${village}
+Address: ${address}
 
-Please confirm my order.`;
+💳 *Payment Method:* ${payment}
 
-    let encodedMessage = encodeURIComponent(message);
+Please confirm the order.`;
 
-    // Put your real WhatsApp number here
-    let phone = "918607457689"; 
+    let encoded = encodeURIComponent(message);
 
-    let url = `https://wa.me/${phone}?text=${encodedMessage}`;
-    window.open(url, "_blank");
+    let whatsappNo = "918607457689";  // <-- change to your number
+
+    let link = `https://wa.me/${whatsappNo}?text=${encoded}`;
+
+    window.open(link, "_blank");
+    closeOrderForm();
 }
 
 

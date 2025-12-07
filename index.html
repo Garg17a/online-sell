@@ -76,6 +76,49 @@
     <button class="btn cart-btn" onclick="goCheckout()">Checkout</button>
 </div>
 
+<div id="orderForm" class="order-modal">
+  <div class="order-box">
+      <h2>Place Order</h2>
+
+      <p><strong>Product:</strong> <span id="orderProductName"></span></p>
+      <p><strong>Price:</strong> ₹<span id="orderProductPrice"></span> per bag</p>
+
+      <label>Quantity</label>
+      <input type="number" id="orderQty" value="1" min="1">
+
+      <label>Your Name</label>
+      <input type="text" id="custName">
+
+      <label>Phone Number</label>
+      <input type="text" id="custPhone">
+
+      <label>Village / City</label>
+      <input type="text" id="custVillage">
+
+      <label>Full Address</label>
+      <textarea id="custAddress"></textarea>
+
+      <label>Delivery Option</label>
+      <select id="deliveryOption">
+          <option value="0">Pickup (Free)</option>
+          <option value="50">Local Delivery – ₹50</option>
+          <option value="100">Outside Delivery – ₹100</option>
+      </select>
+
+      <label>Payment Method</label>
+      <select id="paymentMethod">
+          <option>Cash on Delivery (COD)</option>
+          <option>Online Payment</option>
+      </select>
+
+      <br><br>
+
+      <button class="btn cart-btn" onclick="sendOrderWhatsApp()">Submit Order</button>
+      <button class="btn" onclick="closeOrderForm()">Cancel</button>
+  </div>
+</div>
+
+
 <footer>
     © 2025 Tiwana Cattle Feed Dealership | All Rights Reserved
 </footer>
